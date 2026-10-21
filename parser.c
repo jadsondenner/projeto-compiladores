@@ -11,6 +11,7 @@
 #define FPR 309
 #define FIM 310
 #define ERR 311
+#define EOL 312
 
 int yylex(void);
 extern char *yytext;
@@ -95,9 +96,11 @@ void expressao(void)
     }
 }
 
+
 int main(int argc, char *argv[])
 {
     extern FILE *yyin;
+    int encontrou_expressao = 0;
 
     if (argc == 2)
     {
@@ -111,14 +114,34 @@ int main(int argc, char *argv[])
     }
 
     avancar();
-    expressao();
 
-    if (token == FIM)
+    while (token != FIM)
     {
-        printf("Expressao sintaticamente correta.\n");
-        return 0;
+        if (token == EOL)
+        {
+            avancar();
+            continue;
+        }
+
+        expressao();
+        encontrou_expressao = 1;
+
+        if (token == EOL)
+        {
+            printf("Expressao sintaticamente correta.\n");
+            avancar();
+        }
+        else if (token != FIM)
+        {
+            erro_sintatico();
+        }
     }
 
-    erro_sintatico();
-    return 1;
+    if (!encontrou_expressao)
+    {
+        printf("Nenhuma expressao encontrada.\n");
+    }
+
+    return 0;
 }
+

@@ -11,6 +11,7 @@
 #define FPR 309
 #define FIM 310
 #define ERR 311
+#define EOL 312
 
 %}
 
@@ -28,7 +29,7 @@ NUMERO {DIGITO}+
 "("                { return APR; }
 ")"                { return FPR; }
 
-\n                 { }
+\n                 { return EOL;  }
 \t                 { }
 [ ]+               { }
 
